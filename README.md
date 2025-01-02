@@ -19,6 +19,9 @@ Prerequisites
 git clone https://github.com/zawawiAI/BLIP_CAM.git
 cd BLIP_CAM
 
+
+pip install -r requirements.txt
+
 python BLIP_CAM.py
 
 
