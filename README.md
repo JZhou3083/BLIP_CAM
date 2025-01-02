@@ -36,3 +36,7 @@ Contributions
 Feel free to submit issues, pull requests, or suggestions to improve this project. Let’s make real-time AI captioning more accessible and robust!
 
     
+
+
+https://github.com/user-attachments/assets/3750ada3-811e-4e7a-a572-c9a57099b847
+
