@@ -1,4 +1,4 @@
-# BLIP Live Image Captioning with Real-Time Video Stream 🎥
+# BLIP CAM:SElf Hosted Live Image Captioning with Real-Time Video Stream 🎥
 
 This repository implements real-time image captioning using the BLIP (Bootstrapped Language-Image Pretraining) model. The system captures live video from your webcam, generates descriptive captions for each frame, and displays them in real-time along with performance metrics.
 
