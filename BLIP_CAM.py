@@ -1,5 +1,5 @@
 import cv2
-from transformers import AutoProcessor, AutoModelForImageTextToText
+from transformers import AutoProcessor, AutoModelForImageTextToText,AutoModelForVision2Seq
 import torch
 import logging
 import time
@@ -50,6 +50,13 @@ class CaptionGenerator:
             rgb_image = cv2.cvtColor(image_resized, cv2.COLOR_BGR2RGB)
             pil_image = Image.fromarray(rgb_image)
 
+            prompt = (
+            "Describe the image using the following structure: "
+            "'A [gender] [age group] sitting at the [location], wearing [accessories], and looking [emotion].' "
+            "Ensure the description is concise and follows this format exactly."
+            )
+
+
             # Process the image for captioning
             inputs = self.processor(images=pil_image, return_tensors="pt")
             inputs = {name: tensor.to(self.device) for name, tensor in inputs.items()}
@@ -59,7 +66,9 @@ class CaptionGenerator:
                     **inputs,
                     max_length=30,
                     num_beams=5,
-                    num_return_sequences=1
+                    num_return_sequences=1,
+                    do_sample=True,
+                    temperature=0.1
                 )
 
             caption = self.processor.batch_decode(outputs, skip_special_tokens=True)[0].strip()
@@ -99,9 +108,13 @@ def get_gpu_usage():
 def load_models():
     """Load BLIP model"""
     try:
-        blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-large")
-        blip_model = AutoModelForImageTextToText.from_pretrained("Salesforce/blip-image-captioning-large")
+        blip_processor = AutoProcessor.from_pretrained("Salesforce/blip2-flan-t5-xl")
 
+        blip_model = AutoModelForVision2Seq.from_pretrained(
+            "Salesforce/blip2-flan-t5-xl",
+            device_map="auto",  # Automatically offloads layers
+            torch_dtype=torch.float32,  # Reduces memory usage
+        )
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
         if device == 'cuda':
             # Set GPU memory usage limit to 90%
