@@ -1,5 +1,5 @@
 import cv2
-from transformers import AutoProcessor, AutoModelForImageTextToText
+from transformers import AutoProcessor, AutoModelForImageTextToText,AutoModelForVision2Seq
 import torch
 import logging
 import time
@@ -99,8 +99,14 @@ def get_gpu_usage():
 def load_models():
     """Load BLIP model"""
     try:
-        blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-large")
-        blip_model = AutoModelForImageTextToText.from_pretrained("Salesforce/blip-image-captioning-large")
+        # blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-large")
+        # blip_model = AutoModelForImageTextToText.from_pretrained("Salesforce/blip-image-captioning-large")
+        blip_processor = AutoProcessor.from_pretrained("Salesforce/blip2-flan-t5-xl")
+        blip_model = AutoModelForVision2Seq.from_pretrained(
+        "Salesforce/blip2-flan-t5-xl",
+        device_map="auto",  # Automatically offloads layers
+        torch_dtype=torch.float16,  # Reduces memory usage
+        )
 
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
         if device == 'cuda':
@@ -188,4 +194,3 @@ if __name__ == "__main__":
     logger.info(f"Using {device.upper()} for inference.")
     logger.info("Starting live stream with BLIP captioning and FPS display...")
     live_stream_with_caption(blip_processor, blip_model, device)
-
