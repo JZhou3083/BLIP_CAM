@@ -188,4 +188,3 @@ if __name__ == "__main__":
     logger.info(f"Using {device.upper()} for inference.")
     logger.info("Starting live stream with BLIP captioning and FPS display...")
     live_stream_with_caption(blip_processor, blip_model, device)
-
