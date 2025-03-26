@@ -115,9 +115,9 @@ def load_models():
 
 def live_stream_with_caption(processor, model, device, display_width=1280, display_height=720):
     """Stream webcam feed with live captions and FPS"""
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     if not cap.isOpened():
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(1)
     if not cap.isOpened():
         logger.error("Failed to access webcam.")
         return
