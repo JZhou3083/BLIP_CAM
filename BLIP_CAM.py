@@ -50,15 +50,11 @@ class CaptionGenerator:
             rgb_image = cv2.cvtColor(image_resized, cv2.COLOR_BGR2RGB)
             pil_image = Image.fromarray(rgb_image)
 
-            prompt = (
-            "Describe the image using the following structure: "
-            "'A [gender] [age group] sitting at the [location], wearing [accessories], and looking [emotion].' "
-            "Ensure the description is concise and follows this format exactly."
-            )
+            prompt = "Question: Describe the image including all the people's gender and approximate age, where he/she is sitting and his posture, if there is any child in the image point them out. Answer:"
 
 
             # Process the image for captioning
-            inputs = self.processor(images=pil_image, return_tensors="pt")
+            inputs = self.processor(images=pil_image, text = prompt, return_tensors="pt")
             inputs = {name: tensor.to(self.device) for name, tensor in inputs.items()}
 
             with torch.no_grad():
@@ -67,8 +63,6 @@ class CaptionGenerator:
                     max_length=30,
                     num_beams=5,
                     num_return_sequences=1,
-                    do_sample=True,
-                    temperature=0.1
                 )
 
             caption = self.processor.batch_decode(outputs, skip_special_tokens=True)[0].strip()
